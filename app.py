@@ -11,6 +11,7 @@ from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, PrecisionRe
 from sklearn.metrics import precision_score, recall_score
 from model import preprocessing
 from components import sidebar
+from model import models
 
 def main():
     st.title("Model Selection Web App")
@@ -22,7 +23,26 @@ def main():
         data = preprocessing.load_data(dataset)
         preprocessing.preprocess(dataset, data)
 
+    @st.cache_data(persist = True)
+    def split(df):
+        X_train, X_test, y_train, y_test = preprocessing.split(df)
+        return X_train, X_test, y_train, y_test
+    
     df = load_process(sidebar_data["dataset"])
+    X_train, X_test, y_train, y_test = split(df)
 
+    if sidebar_data["classify"]:
+        if sidebar_data['classifier'] == "Support Vector Machine (SVM)":
+            model = models.svm_model(X_train, y_train, sidebar_data["hyperparameters"])
+            accuracy, precision, recall = models.model_predictions(model, X_test, y_test)
+
+        if sidebar_data['classifier'] == "Logistic Regression":
+            model = models.logistic_model(X_train, y_train, sidebar_data['hyperparameters'])
+            accuracy, precision, recall = models.model_predictions(model, X_test, y_test)
+
+        if sidebar_data['classifier'] == "Random Forest":
+            model = models.forest_model(X_train, y_train, sidebar_data['hyperparameters'])
+            accuracy, precision, recall = models.model_predictions(model, X_test, y_test)
+            
 if __name__ == '__main__':
     main()

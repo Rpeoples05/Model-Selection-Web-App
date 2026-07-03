@@ -13,16 +13,35 @@ def load_sidebar():
 
     if classifier == "Support Vector Machine (SVM)":
         C, kernel, gamma, metrics = model_parameters.svm_parameters()
+        hyperparameters = {
+            "C": C,
+            "kernel": kernel,
+            "gamma": gamma,
+        }
     
     if classifier == "Logistic Regression":
         C, max_iter, metrics = model_parameters.logistic_parameters()
+        hyperparameters = {
+            "C": C,
+            "max_iter": max_iter
+        }
     
     if classifier == "Random Forest":
         n_estimators, max_depth, bootstrap, metrics = model_parameters.forest_parameters()
+        hyperparameters = {
+            "n_estimators": n_estimators,
+            "max_depth": max_depth,
+            "bootstrap": bootstrap
+        }
     
+    classify = st.sidebar.button("Classify", key='classify')
+
     sidebar_data = {
         "dataset": dataset,
-        "classifier": classifier
+        "classifier": classifier,
+        "metrics": metrics,
+        "hyperparameters": hyperparameters,
+        "classify": classify
     }
 
     return sidebar_data
