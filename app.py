@@ -1,17 +1,8 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import ConfusionMatrixDisplay, RocCurveDisplay, PrecisionRecallDisplay
-from sklearn.metrics import precision_score, recall_score
 from model import preprocessing
 from components import sidebar
 from model import models
+from components import evaluation
 
 def main():
     st.title("Model Selection Web App")
@@ -21,7 +12,8 @@ def main():
     @st.cache_data(persist = True)
     def load_process(dataset):
         data = preprocessing.load_data(dataset)
-        preprocessing.preprocess(dataset, data)
+        data = preprocessing.preprocess(dataset, data)
+        return data
 
     @st.cache_data(persist = True)
     def split(df):
@@ -34,15 +26,25 @@ def main():
     if sidebar_data["classify"]:
         if sidebar_data['classifier'] == "Support Vector Machine (SVM)":
             model = models.svm_model(X_train, y_train, sidebar_data["hyperparameters"])
-            accuracy, precision, recall = models.model_predictions(model, X_test, y_test)
+            accuracy, precision, recall, y_pred = models.model_predictions(model, X_test, y_test)
+            evaluation.write_scores(accuracy, precision, recall)
+            evaluation.plot_metrics(sidebar_data['metrics'], model, X_test, y_test, y_pred, sidebar_data["dataset"])
 
         if sidebar_data['classifier'] == "Logistic Regression":
             model = models.logistic_model(X_train, y_train, sidebar_data['hyperparameters'])
-            accuracy, precision, recall = models.model_predictions(model, X_test, y_test)
+            accuracy, precision, recall, y_pred = models.model_predictions(model, X_test, y_test)
+            evaluation.write_scores(accuracy, precision, recall)
+            evaluation.plot_metrics(sidebar_data['metrics'], model, X_test, y_test, y_pred, sidebar_data["dataset"])
 
         if sidebar_data['classifier'] == "Random Forest":
             model = models.forest_model(X_train, y_train, sidebar_data['hyperparameters'])
-            accuracy, precision, recall = models.model_predictions(model, X_test, y_test)
-            
+            accuracy, precision, recall, y_pred = models.model_predictions(model, X_test, y_test)
+            evaluation.write_scores(accuracy, precision, recall)
+            evaluation.plot_metrics(sidebar_data['metrics'], model, X_test, y_test, y_pred, sidebar_data["dataset"])
+
+    if st.sidebar.checkbox("Show raw data", False):
+        st.subheader("Dataset: ", sidebar_data["dataset"])
+        st.write(df)
+
 if __name__ == '__main__':
     main()

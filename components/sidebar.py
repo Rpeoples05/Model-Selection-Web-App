@@ -12,7 +12,7 @@ def load_sidebar():
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest"))
 
     if classifier == "Support Vector Machine (SVM)":
-        C, kernel, gamma, metrics = model_parameters.svm_parameters()
+        C, kernel, gamma, metrics = model_parameters.svm_parameters(dataset)
         hyperparameters = {
             "C": C,
             "kernel": kernel,
@@ -20,14 +20,14 @@ def load_sidebar():
         }
     
     if classifier == "Logistic Regression":
-        C, max_iter, metrics = model_parameters.logistic_parameters()
+        C, max_iter, metrics = model_parameters.logistic_parameters(dataset)
         hyperparameters = {
             "C": C,
             "max_iter": max_iter
         }
     
     if classifier == "Random Forest":
-        n_estimators, max_depth, bootstrap, metrics = model_parameters.forest_parameters()
+        n_estimators, max_depth, bootstrap, metrics = model_parameters.forest_parameters(dataset)
         hyperparameters = {
             "n_estimators": n_estimators,
             "max_depth": max_depth,

@@ -41,8 +41,7 @@ def preprocess(dataset, df):
     return df
 
 def split(df):
-    y = df['category']
+    y = df.category
     X = df.drop(columns = ['category'])
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state = 42, stratify = y)
     return X_train, X_test, y_train, y_test
-

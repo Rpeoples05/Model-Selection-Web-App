@@ -1,1 +1,3 @@
-CLASS_NAMES = ["Bad", "Good", "Okay"]
+CLASS_NAMES = {
+    "Wine Quality Classifier": ["Bad", "Good", "Okay"]
+}
