@@ -6,7 +6,7 @@ def load_sidebar():
     st.sidebar.markdown("Is your wine good quality?")
 
     st.sidebar.subheader("Choose Dataset")
-    dataset = st.sidebar.selectbox("Dataset", ("Wine Quality Classifier"))
+    dataset = st.sidebar.selectbox("Dataset", ("Wine Quality Classifier", "Mushroom Edibility Classifier"))
 
     st.sidebar.subheader("Choose Classifier")
     classifier = st.sidebar.selectbox("Classifier", ("Support Vector Machine (SVM)", "Logistic Regression", "Random Forest"))

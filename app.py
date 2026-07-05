@@ -16,12 +16,12 @@ def main():
         return data
 
     @st.cache_data(persist = True)
-    def split(df):
-        X_train, X_test, y_train, y_test = preprocessing.split(df)
+    def split(df, dataset):
+        X_train, X_test, y_train, y_test = preprocessing.split(df, dataset)
         return X_train, X_test, y_train, y_test
     
     df = load_process(sidebar_data["dataset"])
-    X_train, X_test, y_train, y_test = split(df)
+    X_train, X_test, y_train, y_test = split(df, sidebar_data["dataset"])
 
     if sidebar_data["classify"]:
         if sidebar_data['classifier'] == "Support Vector Machine (SVM)":

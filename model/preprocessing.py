@@ -10,6 +10,8 @@ def load_data(dataset):
         red_wine = pd.read_csv("data/winequality-red.csv", sep = ";")
         red_wine["type"] = "Red"
         df = pd.concat([white_wine, red_wine])
+    if dataset == "Mushroom Edibility Classifier":
+        df = pd.read_csv("data/mushrooms.csv")
     return df
 
 def preprocess(dataset, df):
@@ -24,24 +26,30 @@ def preprocess(dataset, df):
         df['type'] = df['type'].astype('category')
         df = df.drop(columns = ['quality'])
 
-    categorical_cols = df.select_dtypes(include=['category']).columns.tolist()
+    categorical_cols = df.select_dtypes(include=['object','category']).columns.tolist()
     numerical_cols = df.select_dtypes(include=['float64']).columns.tolist()
 
     scaler = StandardScaler()
     labelencoder = LabelEncoder()
 
-    scaled_data = scaler.fit_transform(df[numerical_cols])
-    df_scaled = pd.DataFrame(scaled_data, columns = numerical_cols, index = df.index)
+    if len(numerical_cols) > 0:
+        scaled_data = scaler.fit_transform(df[numerical_cols])
+        df_scaled = pd.DataFrame(scaled_data, columns = numerical_cols, index = df.index)
 
     for col in categorical_cols:
         df[col] = labelencoder.fit_transform(df[col])
 
-    df = pd.concat([df_scaled, df[categorical_cols]], axis=1)
+    if len(numerical_cols) > 0:
+        df = pd.concat([df_scaled, df[categorical_cols]], axis=1)
 
     return df
 
-def split(df):
-    y = df.category
-    X = df.drop(columns = ['category'])
+def split(df, dataset):
+    if dataset == "Wine Qualirt Classifer":
+        y = df.category
+        X = df.drop(columns = ['category'])
+    if dataset == "Mushroom Edibility Classifier":
+        y = df.type
+        X = df.drop(columns = ['type'])
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state = 42, stratify = y)
     return X_train, X_test, y_train, y_test
