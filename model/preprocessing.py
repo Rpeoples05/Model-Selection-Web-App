@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
@@ -45,7 +44,7 @@ def preprocess(dataset, df):
     return df
 
 def split(df, dataset):
-    if dataset == "Wine Qualirt Classifer":
+    if dataset == "Wine Quality Classifier":
         y = df.category
         X = df.drop(columns = ['category'])
     if dataset == "Mushroom Edibility Classifier":
